@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.derrick.park.criminalmind.database.CrimeBaseHelper;
 import com.derrick.park.criminalmind.database.CrimeCursorWrapper;
-import com.derrick.park.criminalmind.database.CrimeDbSchema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,7 @@ public class CrimeLab {
         values.put(CrimeTable.Cols.TITLE, crime.getTitle());
         values.put(CrimeTable.Cols.DATE, crime.getDate().getTime());
         values.put(CrimeTable.Cols.SOLVED, crime.isSolved() ? 1 : 0);
+        values.put(CrimeTable.Cols.SUSPECT, crime.getSuspect());
 
         return values;
     }

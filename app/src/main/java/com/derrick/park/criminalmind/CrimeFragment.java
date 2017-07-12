@@ -143,22 +143,9 @@ public class CrimeFragment extends Fragment {
             }else if(requestCode == REQUEST_PHOTO){
 
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.derrick.park.criminalmind.fileprovider", mPhotoFile);
+            //ending photo
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             updatePhotoView();
-//        }else if(requestCode == REQUEST_CALL && data != null){
-//            Uri contactData = data.getData();
-//            Cursor c = getActivity().managedQuery(contactData, null, null, null, null);
-//            try{
-//                if(c.getCount() == 0){
-//                    c.moveToFirst();
-//                    String id = c.getString(c.getColumnIndex(Contacts.DISPLAY_NAME));
-//                    mCrime.setSuspect(id);
-//
-//                }
-//            }finally {
-//                c.close();
-//
-//            }
 
         }
     }
@@ -246,24 +233,25 @@ public class CrimeFragment extends Fragment {
 //                startActivity(i);
             }
         });
-//        final Intent pickContact = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
+        final Intent pickContact = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
 //        pickContact.addCategory(Intent.CATEGORY_HOME);
-//        mSuspectButton = (Button) v.findViewById(R.id.crime_suspect);
-//        mSuspectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                startActivityForResult(pickContact, REQUEST_CALL);
-//            }
-//        });
-//        if(mCrime.getSuspect() != null){
-//            mSuspectButton.setText(mCrime.getSuspect());
-//        }
+        mSuspectButton = (Button) v.findViewById(R.id.crime_suspect);
+        mSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivityForResult(pickContact, REQUEST_CONTACT);
+            }
+        });
+
+        if(mCrime.getSuspect() != null){
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
         final PackageManager packageManager = getActivity().getPackageManager();
-//        if(packageManager.resolveActivity(pickContact, packageManager.MATCH_DEFAULT_ONLY) == null){
-//            mSuspectButton.setEnabled(false);
-//
-//        }
+        if(packageManager.resolveActivity(pickContact, packageManager.MATCH_DEFAULT_ONLY) == null){
+            mSuspectButton.setEnabled(false);
+
+        }
         mPhotoButton = (ImageButton) v.findViewById(R.id.crime_camera);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
@@ -287,18 +275,15 @@ public class CrimeFragment extends Fragment {
         updatePhotoView();
 
 
+        mCallSuspectButton = (Button) v.findViewById(R.id.call_suspect);
+        mCallSuspectButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                startActivity(intent);
 
-
-//
-//        mCallSuspectButton = (Button) v.findViewById(R.id.call_suspect);
-//        mCallSuspectButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//
-//                startActivityForResult(pickContact, REQUEST_CONTACT);
-//
-//            }
-//        });
+            }
+        });
         return v;
     }
 

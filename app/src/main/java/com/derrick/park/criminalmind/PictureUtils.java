@@ -41,6 +41,7 @@ public class PictureUtils {
         }
 
         options = new BitmapFactory.Options();
+        //写真のサイズ変更
         options.inSampleSize = inSampleSize;
 
         //Read in and create final bitmap

@@ -53,7 +53,6 @@ public class CrimeFragment extends Fragment {
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
-//    private static final int REQUEST_CALL = 2;
     private static final int REQUEST_PHOTO = 2;
     private Button mReportButton;
     private Button mSuspectButton;

@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -30,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +64,8 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private File mPhotoFile;
+    private int mImageViewWidth;
+    private int mImageViewHeight;
 
 
 
@@ -106,7 +112,7 @@ public class CrimeFragment extends Fragment {
         if(mPhotoFile == null || !mPhotoFile.exists()){
             mPhotoView.setImageDrawable(null);
         }else{
-            Bitmap bitmap = PictureUtils.getScaleBitmap(mPhotoFile.getPath(), getActivity());
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mImageViewWidth, mImageViewHeight);
             mPhotoView.setImageBitmap(bitmap);
         }
     }
@@ -138,10 +144,10 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
 
-
             }else if(requestCode == REQUEST_PHOTO){
 
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.derrick.park.criminalmind.fileprovider", mPhotoFile);
+
             //ending photo
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             updatePhotoView();
@@ -273,7 +279,6 @@ public class CrimeFragment extends Fragment {
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
         updatePhotoView();
 
-
         mCallSuspectButton = (Button) v.findViewById(R.id.call_suspect);
         mCallSuspectButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -283,7 +288,45 @@ public class CrimeFragment extends Fragment {
 
             }
         });
+        mPhotoView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(mPhotoFile == null){
+                    mPhotoView.setEnabled(false);
+                }
+
+                Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mImageViewWidth, mImageViewHeight);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                Bundle bundle = new Bundle();
+                bundle.putByteArray("key", byteArray);
+                FragmentManager fm = getFragmentManager();
+                MyDialogFragment dialogFragment = new MyDialogFragment();
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(fm, "Sample Fragment");
+
+            }
+
+        });
+        mPhotoView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+               mImageViewWidth = mPhotoView.getWidth();
+               mImageViewHeight = mPhotoView.getHeight();
+
+                if (Build.VERSION.SDK_INT >= 16) {
+                    mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    mPhotoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            }
+        });
+        updatePhotoView();
         return v;
     }
+
+
 
 }

@@ -1,9 +1,8 @@
 package com.derrick.park.criminalmind;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
+
 
 /**
  * Created by AKI on 2017-07-11.
@@ -11,17 +10,12 @@ import android.graphics.Point;
 
 public class PictureUtils {
 
-
-    public static Bitmap getScaleBitmap(String path, Activity activity){
-        Point size = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(size);
-
-        return getScaledBitmap(path, size.x, size.y);
-
-
-    }
-    public static Bitmap getScaledBitmap(String path, int destWidth, int desHeight){
+    
+    public static Bitmap getScaledBitmap(String path, int desWidth, int desHeight){
         //read in the dimenstions of the image disk
+
+
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         assert options.inJustDecodeBounds = false;
         BitmapFactory.decodeFile(path, options);
@@ -31,10 +25,10 @@ public class PictureUtils {
 
         //figure out how much to scale down by
         int inSampleSize = 1;
-        if(srcHeight > desHeight || srcWidth > destWidth){
+        if(srcHeight > desHeight || srcWidth > desWidth){
 
             float heightScale = srcHeight/desHeight;
-            float widthScale = srcWidth/destWidth;
+            float widthScale = srcWidth/desWidth;
 
             inSampleSize = Math.round(heightScale > widthScale ? heightScale : widthScale);
 

@@ -10,11 +10,9 @@ import android.graphics.BitmapFactory;
 
 public class PictureUtils {
 
-    
+
     public static Bitmap getScaledBitmap(String path, int desWidth, int desHeight){
         //read in the dimenstions of the image disk
-
-
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         assert options.inJustDecodeBounds = false;

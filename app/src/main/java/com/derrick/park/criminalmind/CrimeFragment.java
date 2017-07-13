@@ -294,18 +294,9 @@ public class CrimeFragment extends Fragment {
                 if(mPhotoFile == null){
                     mPhotoView.setEnabled(false);
                 }
-
-                Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), mImageViewWidth, mImageViewHeight);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-                Bundle bundle = new Bundle();
-                bundle.putByteArray("key", byteArray);
                 FragmentManager fm = getFragmentManager();
-                MyDialogFragment dialogFragment = new MyDialogFragment();
-                dialogFragment.setArguments(bundle);
-                dialogFragment.show(fm, "Sample Fragment");
+                MyDialogFragment myDialogFragment = MyDialogFragment.newInstance(mPhotoFile);
+                myDialogFragment.show(fm, "Fragment");
 
             }
 
